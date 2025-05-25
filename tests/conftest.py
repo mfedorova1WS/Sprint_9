@@ -31,17 +31,19 @@ def create_chrome_driver(headless=True) -> webdriver.Chrome:
 
 @pytest.fixture
 def driver(request):
-    """Фикстура WebDriver с параметром для headless/GUI режима."""
     headless = request.config.getoption("--headless")
     with allure.step(f"Создаём драйвер Chrome (headless={headless})"):
         driver = create_chrome_driver(headless=headless)
-        try:
-            yield driver
-        finally:
-            driver.quit()
-            # Удалим временную user data директорию
-            if hasattr(driver, "_user_data_dir") and os.path.exists(driver._user_data_dir):
-                shutil.rmtree(driver._user_data_dir, ignore_errors=True)
+
+    def fin():
+        driver.quit()
+        if hasattr(driver, "_user_data_dir") and os.path.exists(driver._user_data_dir):
+            shutil.rmtree(driver._user_data_dir, ignore_errors=True)
+
+    request.addfinalizer(fin)
+
+    return driver
+
 
 
 def pytest_addoption(parser):

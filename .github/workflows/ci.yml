@@ -11,26 +11,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v4.7.0
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v4
         with:
           python-version: 3.12
 
-      - name: Install dependencies
+      - name: Install Chromium and ChromeDriver
         run: |
-          pip install --upgrade pip
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser chromium-chromedriver
+          chromium-browser --version
+          chromedriver --version
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run tests
+      - name: Run pytest with headless browser
         run: |
-          pytest --alluredir=allure-results -n auto
+          pytest --alluredir=allure-results -n auto --headless
 
       - name: Upload Allure results
-        uses: actions/upload-artifact@main
+        uses: actions/upload-artifact@v3
         with:
           name: allure-results
           path: allure-results
-
