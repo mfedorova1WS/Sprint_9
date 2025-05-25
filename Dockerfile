@@ -60,11 +60,9 @@ RUN wget -q -O /tmp/chromedriver.zip https://storage.googleapis.com/chrome-for-t
 WORKDIR /app
 COPY . /app
 
-# Установка зависимостей
-RUN python3 -m venv venv && \
-    . venv/bin/activate && \
-    pip install --upgrade pip && \
-    pip install -r requirements.txt
+RUN python3 -m venv /app/venv && \
+    /app/venv/bin/pip install --upgrade pip && \
+    /app/venv/bin/pip install -r requirements.txt
 
 # Запуск тестов
-CMD ["/bin/bash", "-c", ". venv/bin/activate && pytest -n auto --headless --alluredir=allure-results"]
+CMD ["/app/venv/bin/python", "-m", "pytest", "-n", "auto", "--headless", "--alluredir=allure-results"]
