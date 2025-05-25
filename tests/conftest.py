@@ -17,6 +17,8 @@ def create_chrome_driver(headless=True) -> webdriver.Chrome:
     chrome_options.add_argument('--disable-gpu')
     chrome_options.add_argument('--remote-debugging-port=0')
 
+    chrome_options.binary_location = "/usr/bin/google-chrome"
+
     # Создание уникальной временной директории для профиля Chrome
     user_data_dir = tempfile.mkdtemp(prefix="chrome-profile-")
     chrome_options.add_argument(f'--user-data-dir={user_data_dir}')
