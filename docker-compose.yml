@@ -1,0 +1,17 @@
+services:
+  selenoid:
+    image: aerokube/selenoid:latest
+    network_mode: bridge
+    ports:
+      - "4444:4444"
+    volumes:
+      - "./config:/etc/selenoid"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    command: ["-limit", "5", "-timeout", "3m", "-video-output-dir", "/opt/selenoid/video"]
+
+  tests:
+    build: .
+    depends_on:
+      - selenoid
+    environment:
+      - SELENIUM_REMOTE_URL=http://selenoid:4444/wd/hub
