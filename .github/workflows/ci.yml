@@ -29,6 +29,8 @@ jobs:
           pytest --alluredir=allure-results -n auto
 
       - name: Upload Allure results
-        uses: actions/upload-artifact@v3.1.2
+        uses: actions/upload-artifact@main
         with:
           name: allure-results
+          path: allure-results
+
